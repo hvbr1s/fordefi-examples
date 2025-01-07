@@ -7,15 +7,6 @@ import json
 import datetime
 
 
-### GOOGLE CLOUD SECRET IMPORT
-# from google.cloud import secretmanager
-
-# def access_secret_version(project_id, secret_id, version_id):
-#     client = secretmanager.SecretManagerServiceClient()
-#     name = f"projects/{project_id}/secrets/{secret_id}/versions/{version_id}"
-#     response = client.access_secret_version(request={"name": name})
-#     return response.payload.data.decode('UTF-8')
-
 ### FUNCTIONS
 
 def broadcast_tx(path, access_token, signature, timestamp, request_body):
@@ -92,10 +83,6 @@ def sign(payload):
     with open(PRIVATE_KEY_FILE, "r") as f:
         signing_key = ecdsa.SigningKey.from_pem(f.read())
 
-    ## GOOGLE CLOUD USE
-    # pem_content = access_secret_version('project_id', 'PRIVATE_KEY_FILE', 'latest')
-    # signing_key = ecdsa.SigningKey.from_pem(pem_content)
-
     signature = signing_key.sign(
         data=payload.encode(), hashfunc=hashlib.sha256, sigencode=ecdsa.util.sigencode_der
     )
@@ -106,7 +93,6 @@ def sign(payload):
 
 ## Set config
 USER_API_TOKEN = os.getenv("FORDEFI_API_TOKEN")
-# USER_API_TOKEN = access_secret_version('project_id', 'USER_API_TOKEN', 'latest') # When using Google Cloud
 evm_chain = "bsc"
 #evm_chain = "ethereum"  
 path = "/api/v1/transactions"
